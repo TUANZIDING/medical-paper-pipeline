@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Generated output files
+figures/
+*.png
+*.tiff
+*.docx
+pipeline_state.json
+*_report.md
+*_draft.md
+*.csv
+*.xlsx
+*.json.bak
+
+# Cache
+.doi_cache/

@@ -1,0 +1,296 @@
+{
+  "_metadata": {
+    "version": "1.0",
+    "created": "2026-03-31",
+    "updated": "2026-04-01",
+    "description": "Statistical methods paragraph template rules for medical paper pipeline. Templates auto-match based on analyses performed in Stage 1. All retrospective studies must comply with STROBE checklist items.",
+    "strobereference": "https://strobe-statement.org/fileadmin/Strobe/uploads/checklists/STROBE_checklist_v4_cohort.pdf",
+    "calibrationreference": "BMJ 2024 prediction model validation: calibration slope, calibration-in-the-large, O/E ratio preferred over Hosmer-Lemeshow test. https://www.bmj.com/content/384/bmj-2023-074820"
+  },
+
+  "template_keys": {
+    "study_design": {
+      "strobe_item": "Item 4",
+      "description": "Study design and type",
+      "variants": {
+        "retrospective_cohort": "This retrospective cohort study was conducted at [institution] between [start_date] and [end_date]. All consecutive patients meeting the following inclusion criteria were identified from [hospital_database_or_registry]: [inclusion_criteria]. Patients with [exclusion_criteria] were excluded.",
+        "retrospective_case_control": "This retrospective case-control study was conducted at [institution] between [start_date] and [end_date]. Cases were defined as [case_definition], and controls were [control_definition]. Cases and controls were matched by [matching_criteria].",
+        "cross_sectional": "This cross-sectional study was conducted at [institution] using data collected between [start_date] and [end_date]. [population] were enrolled based on [inclusion_criteria]."
+      },
+      "placeholder_rules": {
+        "institution": "Full institutional name; e.g., 'Department of Trauma Surgery, X Hospital'",
+        "start_date": "YYYY-MM format",
+        "end_date": "YYYY-MM format",
+        "hospital_database_or_registry": "Specific database or registry name",
+        "inclusion_criteria": "List as bullet points or comma-separated",
+        "exclusion_criteria": "List as bullet points or comma-separated",
+        "case_definition": "Precise case definition",
+        "control_definition": "Precise control definition",
+        "matching_criteria": "Matching variables and method",
+        "population": "Study population description"
+      }
+    },
+
+    "setting": {
+      "strobe_item": "Items 5-6",
+      "description": "Setting, location, dates, participants",
+      "template": "Data were collected from [hospital_name] [trauma_registry / HIS_database / electronic medical records / registry_name]. The study period was [date_range]. Follow-up data were obtained from [follow_up_source]. The study was conducted in accordance with the Declaration of Helsinki.",
+      "placeholder_rules": {
+        "hospital_name": "Full institutional name",
+        "data_source": "Specific database or registry name",
+        "date_range": "YYYY-MM to YYYY-MM",
+        "follow_up_source": "Describe how follow-up was conducted"
+      }
+    },
+
+    "variables": {
+      "strobe_item": "Item 7",
+      "description": "Outcome, exposure, and confounder definitions",
+      "template": "The primary outcome was [outcome_definition]. Secondary outcomes included [secondary_outcomes]. The primary exposure was [exposure_definition]. Potential confounders identified a priori based on clinical relevance included [confounders]. Effect modifiers were assessed through subgroup analysis.",
+      "placeholder_rules": {
+        "outcome_definition": "Must include time window if applicable (e.g., '30-day mortality')",
+        "exposure_definition": "Precise definition of the main independent variable",
+        "confounders": "Clinically justified covariates; do not include mediators on the causal pathway"
+      }
+    },
+
+    "bias_control": {
+      "strobe_item": "Item 9",
+      "description": "Bias control strategy",
+      "template": "To minimize selection bias, consecutive patients meeting the inclusion criteria were enrolled. To address confounding, [multivariate regression / propensity score matching / stratification] adjusting for clinically relevant covariates was performed. Information bias was reduced by [blinding outcome assessors / using standardized definitions from established criteria / data quality audits / other methods].",
+      "placeholder_rules": {
+        "confound_control_method": "multivariate regression | propensity score matching | stratification | inverse probability weighting",
+        "info_bias_reduction": "specific method used to reduce information bias"
+      }
+    },
+
+    "sample_size": {
+      "strobe_item": "Item 10",
+      "description": "Sample size justification for retrospective studies",
+      "template": "The sample size was determined by the number of consecutive eligible patients during the study period. All patients meeting the inclusion criteria were included, representing the entire eligible population at [institution] during the study period. No formal sample size calculation was performed as this was a retrospective analysis of available data.",
+      "note": "Retrospective studies using all available data do not require prospective sample size calculation. However, if the target journal requires justification, consider reporting post-hoc power or precision estimates (e.g., width of 95% CI for the primary outcome)."
+    },
+
+    "variable_handling": {
+      "strobe_item": "Item 11",
+      "description": "Handling of quantitative variables",
+      "template": "Continuous variables were analyzed as [continuous / categorical]. [For continuous: 'Variables were kept as continuous values in regression models and were tested for linearity using restricted cubic splines.'] [For categorical: 'The choice of cutoff points for categorical variables was based on [clinical significance / median values / previously established thresholds / WHO guidelines / receiver operating characteristic (ROC) curve analysis] and was specified prior to analysis.']",
+      "placeholder_rules": {
+        "continuous_or_categorical": "State decision for each major continuous variable",
+        "cutoff_rationale": "Why specific cutoffs were chosen"
+      }
+    },
+
+    "descriptive": {
+      "strobe_item": "Item 14",
+      "description": "Descriptive statistics",
+      "template": "Continuous variables are presented as mean ± standard deviation (SD) for normally distributed data or median (interquartile range, IQR) for non-normally distributed data. Normality was assessed using the Shapiro-Wilk test. Categorical variables are expressed as frequency (percentage, n [%]).",
+      "note": "Table 1 must include p-values for between-group comparisons AND standardized mean differences (SMD). SMD < 0.1 indicates good balance."
+    },
+
+    "t_test": {
+      "strobe_item": "Item 14a",
+      "description": "Between-group comparison for continuous variables",
+      "template": "Between-group comparisons of continuous variables were performed using independent samples t-test for normally distributed data or Mann-Whitney U test for non-normally distributed data. A two-sided P < 0.05 was considered statistically significant.",
+      "template_with_heterogeneity": "Between-group comparisons of continuous variables were performed using independent samples t-test with Welch's correction when variance heterogeneity was detected (Levene's test P < 0.05) or Mann-Whitney U test for non-normally distributed data. A two-sided P < 0.05 was considered statistically significant."
+    },
+
+    "chi_square": {
+      "strobe_item": "Item 14a",
+      "description": "Between-group comparison for categorical variables",
+      "template": "Categorical variables were compared between groups using the χ² test. Fisher's exact test was used when expected cell counts were < 5. A two-sided P < 0.05 was considered statistically significant.",
+      "note": "Always report which test was used and the expected cell count threshold"
+    },
+
+    "survival": {
+      "strobe_item": "Item 17",
+      "description": "Survival analysis",
+      "template": "Survival curves were constructed using the Kaplan-Meier method, and between-group differences were assessed with the log-rank test. Hazard ratios (HR) with 95% confidence intervals (CI) were calculated using Cox proportional hazards regression. The proportionality assumption was verified using Schoenfeld residuals; if violated, [time-varying HR / stratified Cox model] was used.",
+      "template_no_proportionality": "Survival curves were constructed using the Kaplan-Meier method, and between-group differences were assessed with the log-rank test. The proportionality assumption was violated [state which variable(s)]; therefore, [time-varying HR / stratified Cox model / other approach] was applied.",
+      "note": "If proportionality fails, this must be acknowledged and addressed — not swept under the rug"
+    },
+
+    "logistic_regression": {
+      "strobe_item": "Item 14b",
+      "description": "Logistic regression",
+      "template": "Univariate logistic regression was initially performed to screen potential predictors. Variables with P < 0.10 in univariate analysis were included in multivariate logistic regression to identify independent risk factors. Results are presented as odds ratios (OR) with 95% CI. Clinically relevant covariates (e.g., age, sex) were retained in the final model regardless of statistical significance. Model goodness-of-fit was assessed using the Hosmer-Lemeshow test.",
+      "template_forced_entry": "Multivariate logistic regression was performed with all clinically relevant covariates forced into the model regardless of univariate P-value. This approach was chosen to avoid overfitting and to ensure clinically important variables were not omitted. Results are presented as adjusted odds ratios (aOR) with 95% CI.",
+      "placeholder_rules": {
+        "p_value_threshold_univariate": "Default is P < 0.10 for screening; P < 0.05 for hypothesis-driven variables",
+        "retained_covariates": "List clinically forced variables"
+      }
+    },
+
+    "cox_regression": {
+      "strobe_item": "Item 17",
+      "description": "Cox proportional hazards regression",
+      "template": "Univariate Cox regression was initially performed to screen potential predictors. Variables with P < 0.10 in univariate analysis were included in multivariate Cox proportional hazards regression to identify independent predictors of [outcome]. Results are presented as hazard ratios (HR) with 95% CI. The proportionality assumption was verified using Schoenfeld residuals.",
+      "note": "Combine with survival template for complete reporting"
+    },
+
+    "correlation": {
+      "strobe_item": "Item 14a",
+      "description": "Correlation analysis",
+      "template": "Correlation between continuous variables was assessed using Pearson's r for normally distributed data or Spearman's rho for non-normally distributed data (assessed by Shapiro-Wilk test). Correlation coefficients are reported with 95% CI.",
+      "note": "Do not use correlation as the primary evidence for causal relationships"
+    },
+
+    "roc_analysis": {
+      "strobe_item": "Item 16",
+      "description": "ROC curve and AUC analysis",
+      "template": "The discriminative ability of [the prediction model / the diagnostic test] was assessed using receiver operating characteristic (ROC) curve analysis. The area under the ROC curve (AUC) with 95% CI was calculated. Pairwise AUC comparisons were performed using the DeLong test. An AUC of 0.5 indicates no discriminative ability, and 1.0 indicates perfect discrimination.",
+      "placeholder_rules": {
+        "model_or_test": "Name of prediction model or diagnostic test",
+        "comparison": "What is being compared (e.g., Model A vs Model B)"
+      }
+    },
+
+    "calibration": {
+      "strobe_item": "Item 16",
+      "description": "Model calibration assessment",
+      "template": "Model calibration was evaluated using [calibration plots showing observed versus predicted probabilities across risk deciles / calibration curves]. Calibration was quantified using the calibration slope, calibration-in-the-large, and the observed-to-expected (O/E) ratio with 95% CI. [Note: the Hosmer-Lemeshow test was used as supplementary assessment but is not reported as the primary calibration metric due to its dependence on arbitrary grouping and sample size, as recommended by contemporary prediction model reporting standards.]",
+      "template_with_hl_only": "Model calibration was evaluated using calibration plots showing observed versus predicted probabilities across risk deciles. The Hosmer-Lemeshow goodness-of-fit test was performed as a supplementary assessment.",
+      "note": "BMJ 2024 guidance explicitly discourages using Hosmer-Lemeshow as the primary calibration metric. Prefer: calibration slope, calibration-in-the-large, O/E ratio with 95% CI, and calibration curves. See: https://www.bmj.com/content/384/bmj-2023-074820",
+      "placeholder_rules": {
+        "calibration_method": "primary: calibration slope + calibration-in-the-large + O/E ratio + calibration plot"
+      }
+    },
+
+    "internal_validation": {
+      "strobe_item": "Item 16",
+      "description": "Bootstrap internal validation",
+      "template": "Internal validation was performed using bootstrap resampling with [1,000/10,000] iterations. For each bootstrap sample, the model was refitted and evaluated on the original sample. The optimism (difference between bootstrap and original performance) was calculated and subtracted from the apparent performance to obtain optimism-corrected estimates. The bootstrap-corrected C-index was [X.XXX] (95% CI [X.XXX–X.XXX]).",
+      "note": "Bootstrap is preferred over split-sample validation for retrospective studies with limited sample sizes. Cite: CHEST statistical reporting guidelines"
+    },
+
+    "propensity_matching": {
+      "strobe_item": "Items 12, 14b",
+      "description": "Propensity score matching",
+      "template": "To control for confounding, 1:1 nearest-neighbor propensity score matching without replacement was performed using a caliper width of [0.2 SD of the logit of the propensity score / specified caliper]. The propensity score was estimated using multivariate logistic regression including [list of covariates]. Covariate balance after matching was assessed using standardized mean differences (SMD); SMD < 0.1 was considered adequate balance for all covariates.",
+      "template_psm_failure": "Propensity score matching was attempted; however, [reason for failure, e.g., 'no adequate matches were found within the specified caliper for X patients']. Alternative approaches such as [IPW / covariate adjustment] were used.",
+      "placeholder_rules": {
+        "caliper": "Standard: 0.2 SD of logit(PS); narrower calipers increase balance but reduce sample size",
+        "covariates_in_psm": "All covariates suspected to cause confounding plus predictors of exposure and outcome"
+      }
+    },
+
+    "multiple_imputation": {
+      "strobe_item": "Item 12c",
+      "description": "Multiple imputation by chained equations (MICE)",
+      "template": "Multiple imputation by chained equations (MICE) was used to handle missing data. [N] imputed datasets were generated. The imputation model included all predictors, the outcome, and auxiliary variables related to missingness. [If applicable: predictive mean matching / logistic regression / other] was used for [continuous / binary / categorical] variables. Convergence was assessed by inspecting trace plots. Results were pooled across imputed datasets according to Rubin's rules. The proportion of missing data for each variable is reported in Table 1.",
+      "template_mice_diagnostics": "Multiple imputation by chained equations (MICE) with [N] imputations was performed. Convergence was confirmed by reviewing trace plots (means and SDs across iterations stabilized). [If applicable: comparing observed vs imputed distributions / checking that imputed values are plausible]. Missing data proportions are reported in Table 1.",
+      "references": [
+        "Hübner et al., BMC Med Res Methodol, 2020: https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-020-00942-y",
+        "MI best practices checklist: https://martin-vasilev.github.io/papers/Best_practices_multiple_imputation.pdf"
+      ],
+      "placeholder_rules": {
+        "imputation_count": "Minimum 5; 20-50 recommended for high missingness",
+        "imputation_method": "Predictive mean matching (continuous), logistic (binary), polytomous (categorical)",
+        "convergence_check": "Trace plot inspection, Gelman-Rubin statistic"
+      }
+    },
+
+    "multivariate_adjustment": {
+      "strobe_item": "Item 14b",
+      "description": "Multivariate model adjustment strategy",
+      "template": "Multivariate analysis was adjusted for clinically relevant covariates including [list]. All clinically relevant variables were retained in the final model regardless of statistical significance to avoid overfitting and to ensure clinically important confounders were not excluded. The events-per-variable (EPV) ratio was [N events / number of parameters]; EPV ≥ 10 was maintained to minimize overfitting risk.",
+      "placeholder_rules": {
+        "covariates": "Must be clinically justified; list each covariate with rationale",
+        "epv_ratio": "events / number of parameters in the model"
+      }
+    },
+
+    "sensitivity_analysis": {
+      "strobe_item": "Item 12d",
+      "description": "Sensitivity analyses",
+      "template": "Sensitivity analyses were performed to assess the robustness of our findings: (1) complete case analysis excluding patients with missing data; (2) [alternative model specification / multiple imputation for missing data / subgroup analysis by [stratum] / alternative definition of [variable]]. Results of sensitivity analyses were compared with the primary analysis.",
+      "template_comprehensive": "Sensitivity analyses were performed to assess the robustness of our findings: (1) complete case analysis excluding patients with any missing data in the primary analysis variables; (2) multiple imputation analysis under the missing-at-random (MAR) assumption; (3) [alternative model specification, e.g., entering continuous variables as categorical]; (4) [alternative outcome definition, e.g., 30-day vs in-hospital mortality].",
+      "placeholder_rules": {
+        "sa_1": "Usually complete case analysis",
+        "sa_2": "Multiple imputation (if not primary)",
+        "sa_3": "Model specification change",
+        "sa_4": "Outcome definition change or subgroup analysis"
+      }
+    },
+
+    "missing_data": {
+      "strobe_item": "Item 12c",
+      "description": "Missing data handling",
+      "template": "Missing data were handled using complete case analysis. The proportion of missing values for each variable is reported in Table 1. The missingness mechanism was characterized as [MCAR / MAR / MNAR]; [brief justification]. Under the MAR assumption and assuming the model was correctly specified, complete case analysis produces valid estimates.",
+      "template_with_mi": "Missing data were handled using complete case analysis as the primary approach. As a sensitivity analysis, multiple imputation with [N] imputations was performed under the missing-at-random (MAR) assumption; results are reported in [corresponding section]. Missing data proportions are reported in Table 1.",
+      "placeholder_rules": {
+        "missingness_mechanism": "MCAR (no reason to suspect systematic missingness) | MAR (predictors of missingness identified) | MNAR (sensitivity analysis for MNAR warranted)"
+      }
+    },
+
+    "software": {
+      "strobe_item": "Item 12",
+      "description": "Statistical software",
+      "template": "All statistical analyses were performed using Python [version, e.g., 3.11] with scipy (version), statsmodels (version), and lifelines (version) packages. Survival curves were generated using lifelines. ROC curve analysis was performed using sklearn (version). Multiple imputation was performed using [scikit-learn IterativeImputer / mice / other]. Figures were generated using matplotlib (version) and seaborn (version). Calibration plots were generated using [calibration_curve from sklearn / custom matplotlib code]. A two-sided P < 0.05 was considered statistically significant.",
+      "note": "Always report exact package names and versions — reviewers and editors require this for reproducibility"
+    },
+
+    "subgroup_analysis": {
+      "strobe_item": "Item 12b",
+      "description": "Subgroup and interaction analysis",
+      "template": "Subgroup analyses were performed to assess whether the association between [exposure] and [outcome] differed across [subgroup variable(s)]. The following subgroups were pre-specified: [list]. [If applicable: additional subgroup analyses were performed post-hoc and should be interpreted as exploratory]. Effect modification was assessed by including multiplicative interaction terms in the regression model, and the significance of interaction was tested using the likelihood ratio test. Results are presented as stratum-specific effect estimates with 95% CI.",
+      "placeholder_rules": {
+        "pre_specified_subgroups": "Must be listed in Methods section before seeing data",
+        "post_hoc_subgroups": "Must be flagged as exploratory in Results and Discussion"
+      }
+    },
+
+    "propensity_score_weighting": {
+      "strobe_item": "Items 12, 14b",
+      "description": "Inverse probability weighting (IPW) using propensity scores",
+      "template": "To control for confounding, inverse probability of treatment weighting (IPTW) was applied using propensity scores. Weights were stabilized by the marginal probability of exposure to reduce variance. Covariate balance after weighting was assessed using standardized mean differences (SMD); SMD < 0.1 was considered adequate. The analysis was additionally adjusted for [remaining covariates].",
+      "note": "IPTW is sensitive to extreme weights; report weight trimming strategy if used"
+    }
+  },
+
+  "template_order": [
+    "study_design",
+    "setting",
+    "variables",
+    "bias_control",
+    "sample_size",
+    "variable_handling",
+    "missing_data",
+    "descriptive",
+    "t_test",
+    "chi_square",
+    "correlation",
+    "logistic_regression",
+    "cox_regression",
+    "survival",
+    "roc_analysis",
+    "calibration",
+    "internal_validation",
+    "propensity_matching",
+    "propensity_score_weighting",
+    "multivariate_adjustment",
+    "multiple_imputation",
+    "sensitivity_analysis",
+    "subgroup_analysis",
+    "software"
+  ],
+
+  "strobe_item_mapping": {
+    "Item 4": ["study_design"],
+    "Item 5-6": ["setting"],
+    "Item 7": ["variables"],
+    "Item 9": ["bias_control"],
+    "Item 10": ["sample_size"],
+    "Item 11": ["variable_handling"],
+    "Item 12": ["bias_control", "multivariate_adjustment", "software", "propensity_matching"],
+    "Item 12b": ["subgroup_analysis", "propensity_matching"],
+    "Item 12c": ["missing_data", "multiple_imputation"],
+    "Item 12d": ["sensitivity_analysis"],
+    "Item 13": "patient flow chart (figures/flow_chart.png)",
+    "Item 14": ["descriptive"],
+    "Item 14a": ["t_test", "chi_square", "correlation"],
+    "Item 14b": ["logistic_regression", "cox_regression", "propensity_matching", "propensity_score_weighting"],
+    "Item 16": ["roc_analysis", "calibration", "internal_validation"],
+    "Item 17": ["survival", "cox_regression"]
+  }
+}
