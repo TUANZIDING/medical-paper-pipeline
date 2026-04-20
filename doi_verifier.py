@@ -42,6 +42,13 @@ from enum import Enum
 from pathlib import Path
 from typing import Any
 
+from security_guardrails import (
+    PHIGuard,
+    SafeHttpClient,
+    SafePathPolicy,
+    prepend_disclaimer,
+)
+
 # ─── Constants ────────────────────────────────────────────────────────────────
 
 PUBMED_EUTILS_BASE = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
@@ -298,22 +305,24 @@ class HTTPClient:
 
     def __init__(self, timeout: int = REQUEST_TIMEOUT):
         self.timeout = timeout
+        self._safe = SafeHttpClient(retries=3, timeout=float(timeout))
 
     def get_json(self, url: str, headers: dict[str, str] | None = None) -> dict | None:
+        body, exc = self._safe.fetch_text(url)
+        if exc is not None:
+            return None
+        if body is None:
+            return None
         try:
-            req = urllib.request.Request(url, headers=headers or {})
-            with urllib.request.urlopen(req, timeout=self.timeout) as resp:
-                return json.loads(resp.read().decode("utf-8"))
-        except Exception as e:
+            return json.loads(body)
+        except Exception:
             return None
 
     def get_text(self, url: str, headers: dict[str, str] | None = None) -> str | None:
-        try:
-            req = urllib.request.Request(url, headers=headers or {})
-            with urllib.request.urlopen(req, timeout=self.timeout) as resp:
-                return resp.read().decode("utf-8")
-        except Exception:
+        body, exc = self._safe.fetch_text(url)
+        if exc is not None:
             return None
+        return body
 
 
 # ─── PubMed API ──────────────────────────────────────────────────────────────
@@ -997,7 +1006,7 @@ class DOIVerifier:
             if entry.error_message:
                 lines.append(f"**Error:** {entry.error_message}\n")
 
-        return "\n".join(lines)
+        return prepend_disclaimer("\n".join(lines))
 
     def _status_icon(self, status: VerificationStatus) -> str:
         icons = {
@@ -1013,8 +1022,23 @@ class DOIVerifier:
         self, report: VerificationReport, output_path: str | Path
     ) -> None:
         """Save verification report to markdown file."""
-        content = self.format_report_markdown(report)
+        repo_root = Path(__file__).parent
+        policy = SafePathPolicy(repo_root)
+
         path = Path(output_path)
+        if not policy.is_allowed(path):
+            raise ValueError(f"Output path is not within allowed directories: {output_path}")
+
+        content = self.format_report_markdown(report)
+
+        # Scan for PHI before writing
+        findings = PHIGuard().find(content)
+        if findings:
+            raise ValueError(
+                f"Report contains PHI and cannot be saved: "
+                f"{[{'kind': f.kind, 'value': f.value} for f in findings]}"
+            )
+
         path.parent.mkdir(parents=True, exist_ok=True)
         with open(path, "w", encoding="utf-8") as f:
             f.write(content)

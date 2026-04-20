@@ -169,6 +169,14 @@ All journal specifications sourced from:
 
 MIT License — see [LICENSE](LICENSE) file.
 
+## Safety and Privacy Requirements
+
+- This tool must only be used with de-identified data. Do not input real identifiable patient data into this workflow.
+- All AI-generated outputs require human review and verification before manuscript submission.
+- `NEEDS_REVIEW` indicates blocking manual review, not successful automated validation.
+- `pipeline_state.json` should be stored with owner-only permissions (`chmod 600`).
+- This tool is not for clinical decision-making. It must not be used for clinical diagnosis, treatment, or bedside decision-making.
+
 ## Acknowledgments
 
 - [STROBE Statement](https://www.strobe-statement.org/) for observational study reporting guidelines

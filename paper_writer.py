@@ -35,6 +35,13 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from security_guardrails import (
+    PHIGuard,
+    SafePathPolicy,
+    mark_review_required,
+    prepend_disclaimer,
+)
+
 
 # ─── Section Structure ────────────────────────────────────────────────────────
 
@@ -671,11 +678,32 @@ class PaperWriter:
             strobe = mb.check_strobe(self.stat_methods)
             manuscript += self._render_strobe_report(strobe)
 
+        # Security: prepend disclaimer
+        manuscript = prepend_disclaimer(manuscript)
+
+        # Security: scan for PHI
+        findings = PHIGuard().find(manuscript)
+        if findings:
+            raise ValueError(f"PHI detected in manuscript: {[f.kind for f in findings]}")
+
         # Write output
         if output:
             out_path = Path(output)
+            policy = SafePathPolicy(repo_root=Path.cwd())
+            if not policy.is_allowed(out_path):
+                raise ValueError(
+                    f"Output path '{out_path}' is not in an allowed directory. "
+                    "Allowed: outputs/, figures/, logs/, pipeline_state.json."
+                )
             out_path.parent.mkdir(parents=True, exist_ok=True)
             out_path.write_text(manuscript, encoding="utf-8")
+
+            # Security: mark manuscript draft for review in pipeline_state.json
+            state_file = self.project_dir / "pipeline_state.json"
+            if state_file.exists():
+                state = json.loads(state_file.read_text(encoding="utf-8"))
+                mark_review_required(state, "manuscript_draft.md")
+                state_file.write_text(json.dumps(state, indent=2), encoding="utf-8")
 
         return manuscript
 
