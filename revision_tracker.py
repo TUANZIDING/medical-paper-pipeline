@@ -24,12 +24,15 @@ CLI usage:
 from __future__ import annotations
 
 import json
+import os
 import sys
 from dataclasses import dataclass, asdict, field
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
+
+import security_guardrails
 
 
 class CommentStatus(Enum):
@@ -118,6 +121,7 @@ class RevisionTracker:
 
     def __init__(self, state_path: str | Path):
         self.state_path = Path(state_path)
+        self.comments: list = []
 
     # ─── Lifecycle ─────────────────────────────────────────────────────────
 
@@ -143,8 +147,11 @@ class RevisionTracker:
         for c_data in stage5.get("comments", []):
             self.comments.append(TrackedComment.from_dict(c_data))
 
-    def save(self) -> None:
+    def save(self, review_gates: dict | None = None) -> None:
         """Save tracker state to pipeline_state.json."""
+        policy = security_guardrails.SafePathPolicy(self.state_path.parent)
+        if not policy.is_allowed(self.state_path):
+            raise PermissionError(f"Path {self.state_path} is not allowed by SafePathPolicy")
         data = {}
         if self.state_path.exists():
             try:
@@ -163,10 +170,21 @@ class RevisionTracker:
         }
         data["stage_5"] = stage5
 
-        self.state_path.parent.mkdir(parents=True, exist_ok=True)
+        if review_gates is not None:
+            data.setdefault("security", {})
+            data["security"]["review_gates"] = review_gates
+
+        if review_gates is None:
+            review_gates = data.get("security", {}).get("review_gates", {})
+        for artifact in ("response_letter.md", "revision_summary.md"):
+            if artifact not in review_gates:
+                security_guardrails.mark_review_required(data, artifact)
+
+        self.state_path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
         self.state_path.write_text(
             json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
         )
+        security_guardrails.chmod_owner_only(self.state_path)
 
     # ─── Comment management ───────────────────────────────────────────────
 

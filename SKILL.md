@@ -321,6 +321,13 @@ AI生成`init_data_assessment.md`，包含：
 
 ---
 
+## Security Gates
+
+- Stage 0 requires de-identification confirmation before pipeline progression.
+- Core AI-generated outputs in Stages 1-5 require explicit human review approval.
+- Any `NEEDS_REVIEW` result blocks automatic pass-through and requires manual follow-up.
+- Output files must be written only to approved project-local locations (figures/, outputs/, logs/, pipeline_state.json).
+
 ## pipeline_state.json 状态转换
 
 ```
